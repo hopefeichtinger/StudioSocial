@@ -13,7 +13,10 @@
 <link rel="icon" href="icon.png">
 
 <style>
-:root{color-scheme:light;--bg:#fff;--hero:#fff;--card:#fff;--ink:#2b2745;--mute:#7d7a98;--line:#f2f0fb;--me:#7f6bff;--you:#a8ecda;--soft:#f6f4ff;--on:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{color-scheme:light;--bg:#fff;--hero:#fff;--card:#fff;--ink:#2b2745;--mute:#7d7a98;--line:#f2f0fb;--me:#7f6bff;--you:#a8ecda;--soft:#f6f4ff;--on:#fff;--me2:#b5a9ff;--glow:122,102,255;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+/* Studio themes: original palettes, switched by the studio menu */
+:root[data-studio="solid"]{--me:#1f7a8c;--me2:#5fb0bd;--you:#f2d49b;--soft:#eef6f7;--line:#e4eef0;--ink:#14303a;--mute:#5f7b84;--glow:31,122,140}
+:root[data-studio="barre"]{--me:#c24d7c;--me2:#e58fae;--you:#f8cdbf;--soft:#fdf1f5;--line:#f8e6ec;--ink:#3b2230;--mute:#8b6b7a;--glow:194,77,124}
 @media not all{:root:not([data-theme="light"]){--bg:#13111f;--card:#1e1b30;--ink:#f1effa;--mute:#a09bbd;--line:#2f2b47;--me:#8d78ff;--you:#2fd8b4;--soft:#2a2547;--hero:#1d1836;--on:#0f0c1c}}
 :root[data-theme="dark"]{--bg:#13111f;--card:#1e1b30;--ink:#f1effa;--mute:#a09bbd;--line:#2f2b47;--me:#8d78ff;--you:#2fd8b4;--soft:#2a2547;--hero:#1d1836;--on:#0f0c1c}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -36,12 +39,12 @@ body{margin:0;background:linear-gradient(180deg,var(--hero) 0,var(--bg) 300px) n
 h1{font-size:26px;margin:0;letter-spacing:-.3px}
 h2{font-size:18px;margin:20px 0 8px;letter-spacing:-.2px}
 p{margin:4px 0}.mute{color:var(--mute);font-size:14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;margin-bottom:12px;box-shadow:0 6px 22px rgba(122,102,255,.07)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;margin-bottom:12px;box-shadow:0 6px 22px rgba(var(--glow),.07)}
 .row{display:flex;align-items:center;gap:10px}.grow{flex:1;min-width:0}
 .av{width:36px;height:36px;border-radius:50%;display:inline-grid;place-items:center;color:#fff;font-weight:700;flex:none;box-shadow:0 3px 8px rgba(0,0,0,.12)}
 .avs{display:flex}.avs .av{width:26px;height:26px;font-size:12px;margin-left:-6px;border:2px solid var(--card)}.avs .av:first-child{margin-left:0}
 .cls b{display:block}.cls{border-left:6px solid var(--you)}.days{display:flex;gap:8px;margin:6px 0 12px}.day{flex:1;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;padding:8px 0;font:inherit;cursor:pointer}.day span{display:block;font-size:12px;color:var(--mute)}.day b{font-size:18px}.day.on{background:var(--me);color:var(--on);border-color:var(--me)}.day.on span{color:var(--on)}.day:focus-visible{outline:3px solid var(--you);outline-offset:2px}.slot{display:flex;gap:10px}.slot .tm{width:56px;flex:none;font-size:13px;color:var(--mute);padding-top:18px}.slot .card{flex:1;min-width:0}.pill{background:var(--soft);color:var(--me);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;white-space:nowrap}
-.btn{border:0;border-radius:14px;padding:10px 16px;font:inherit;font-weight:600;background:linear-gradient(135deg,var(--me),#b5a9ff);color:var(--on);cursor:pointer;box-shadow:0 6px 14px rgba(122,102,255,.2)}
+.btn{border:0;border-radius:14px;padding:10px 16px;font:inherit;font-weight:600;background:linear-gradient(135deg,var(--me),var(--me2));color:var(--on);cursor:pointer;box-shadow:0 6px 14px rgba(var(--glow),.2)}
 .btn.alt{background:var(--soft);color:var(--ink);box-shadow:none}.btn:disabled{opacity:.6;cursor:default}
 .btn:focus-visible,.seg button:focus-visible,.chip:focus-visible,.tabs button:focus-visible{outline:3px solid var(--you);outline-offset:2px}
 .seg{display:flex;background:var(--soft);border-radius:10px;padding:3px;margin-top:10px}
@@ -219,6 +222,7 @@ function privacy(){
   return h;
 }
 function R(){
+  document.documentElement.dataset.studio={"CorePower":"core","Solid Core":"solid","Pure Barre":"barre"}[S.studio];
   document.getElementById("studio-label").textContent=S.studio+" · Chicago";
   document.getElementById("mark").setAttribute("aria-label","Switch studio. Now showing "+S.studio);
   document.getElementById("menu").innerHTML='<small>Studio</small>'+SN.map(n=>`<button role="menuitemradio" aria-checked="${n===S.studio}" class="${n===S.studio?"on":""}" onclick="pickStudio(\'${n}\')"><span>${n}</span>${n===S.studio?'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5"/></svg>':""}</button>`).join("");
