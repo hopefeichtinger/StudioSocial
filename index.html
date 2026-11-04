@@ -9,16 +9,22 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Duo Flow">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
+
 <style>
 :root{color-scheme:light;--bg:#fff;--hero:#fff;--card:#fff;--ink:#2b2745;--mute:#7d7a98;--line:#f2f0fb;--me:#7f6bff;--you:#a8ecda;--soft:#f6f4ff;--on:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media not all{:root:not([data-theme="light"]){--bg:#13111f;--card:#1e1b30;--ink:#f1effa;--mute:#a09bbd;--line:#2f2b47;--me:#8d78ff;--you:#2fd8b4;--soft:#2a2547;--hero:#1d1836;--on:#0f0c1c}}
+:root[data-theme="dark"]{--bg:#13111f;--card:#1e1b30;--ink:#f1effa;--mute:#a09bbd;--line:#2f2b47;--me:#8d78ff;--you:#2fd8b4;--soft:#2a2547;--hero:#1d1836;--on:#0f0c1c}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
-body{margin:0;background:#fff;color:var(--ink);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{margin:0;background:linear-gradient(180deg,var(--hero) 0,var(--bg) 300px) no-repeat var(--bg);color:var(--ink);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .wrap{max-width:480px;margin:0 auto;padding:18px 16px 110px}
 .top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.mark{width:38px;height:26px;position:relative;flex:none}
+.mark{width:38px;height:26px;position:relative;flex:none;display:block;border:0;background:none;padding:0;cursor:pointer}
 .mark i{position:absolute;top:0;width:26px;height:26px;border-radius:50%;mix-blend-mode:multiply}
 .mark i:first-child{left:0;background:var(--me)}.mark i:last-child{left:12px;background:var(--you)}
+@media not all{.mark i{mix-blend-mode:screen}}
 h1{font-size:26px;margin:0;letter-spacing:-.3px}
 h2{font-size:18px;margin:20px 0 8px;letter-spacing:-.2px}
 p{margin:4px 0}.mute{color:var(--mute);font-size:14px}
@@ -29,10 +35,13 @@ p{margin:4px 0}.mute{color:var(--mute);font-size:14px}
 .cls b{display:block}.cls{border-left:6px solid var(--you)}.days{display:flex;gap:8px;margin:6px 0 12px}.day{flex:1;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;padding:8px 0;font:inherit;cursor:pointer}.day span{display:block;font-size:12px;color:var(--mute)}.day b{font-size:18px}.day.on{background:var(--me);color:var(--on);border-color:var(--me)}.day.on span{color:var(--on)}.day:focus-visible{outline:3px solid var(--you);outline-offset:2px}.slot{display:flex;gap:10px}.slot .tm{width:56px;flex:none;font-size:13px;color:var(--mute);padding-top:18px}.slot .card{flex:1;min-width:0}.pill{background:var(--soft);color:var(--me);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;white-space:nowrap}
 .btn{border:0;border-radius:14px;padding:10px 16px;font:inherit;font-weight:600;background:linear-gradient(135deg,var(--me),#b5a9ff);color:var(--on);cursor:pointer;box-shadow:0 6px 14px rgba(122,102,255,.2)}
 .btn.alt{background:var(--soft);color:var(--ink);box-shadow:none}.btn:disabled{opacity:.6;cursor:default}
-.btn:focus-visible,.seg button:focus-visible,.tabs button:focus-visible{outline:3px solid var(--you);outline-offset:2px}
+.btn:focus-visible,.seg button:focus-visible,.chip:focus-visible,.tabs button:focus-visible{outline:3px solid var(--you);outline-offset:2px}
 .seg{display:flex;background:var(--soft);border-radius:10px;padding:3px;margin-top:10px}
 .seg button{flex:1;border:0;background:none;color:var(--ink);padding:7px 4px;border-radius:8px;font:inherit;font-size:14px;cursor:pointer}
 .seg button.on{background:var(--me);color:var(--on);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer}
+.chip.on{background:var(--you);color:#0f3a30;border-color:var(--you);font-weight:600}.chip:disabled{opacity:.5;cursor:default}
 .line{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px solid var(--line);font-size:14px}
 .sw{position:relative;width:48px;height:28px;border-radius:99px;border:0;background:var(--line);cursor:pointer;flex:none}
 .sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .15s}
@@ -41,7 +50,7 @@ p{margin:4px 0}.mute{color:var(--mute);font-size:14px}
 .tabs div{display:flex;width:100%;max-width:480px;padding:6px 8px;gap:4px}
 .tabs button{flex:1;border:0;background:none;color:var(--mute);padding:10px 4px 12px;font:inherit;font-size:12px;cursor:pointer}
 .tabs button span{display:block;height:24px;margin-bottom:2px}.tabs button svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}.tabs button.on{color:var(--me);font-weight:700;background:var(--soft);border-radius:16px}
-#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%}
 #toast.show{opacity:1}
 .link{background:none;border:0;color:var(--me);font:inherit;font-size:14px;cursor:pointer;padding:4px 0}
 input,textarea{width:100%;border:1px solid #dcd8f0;border-radius:12px;padding:12px;font:inherit;margin:6px 0;background:#fff;color:var(--ink)}
@@ -53,25 +62,43 @@ input:focus-visible,textarea:focus-visible,.link:focus-visible{outline:3px solid
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><div class="mark" aria-hidden="true"><i></i><i></i></div><h1>Duo Flow</h1><span class="mute">CorePower · Chicago</span></div>
+  <div class="top"><button class="mark" id="mark" type="button" onclick="nextStudio()" aria-label="Switch studio"><i></i><i></i></button><h1>Duo Flow</h1><span class="mute" id="studio-label">CorePower · Chicago</span></div>
+  <p class="mute" id="hint" style="margin:-6px 0 10px">Tap the logo to switch studios.</p>
   <main id="app"></main>
 </div>
 <nav class="tabs" aria-label="Main"><div id="tabs"></div></nav>
 <div id="toast" role="status"></div>
 <script>
-const D=["Mon","Tue","Wed","Thu","Fri"],T=["6:00 AM","12:00 PM","6:00 PM"],N=["Yoga Sculpt","CorePower StrengthX","CorePower1","CorePower 2"],Z=["Lakeview","Lincoln Park","Old Town"];
-const C=[];D.forEach((d,i)=>T.forEach((t,j)=>C.push({id:i+"-"+j,d:d,t:t,n:(i===1&&j===1)?N[0]:N[(i+j)%4],l:Z[(i*2+j)%3],s:(i*5+j*7)%9+2})));
-const byId=Object.fromEntries(C.map(c=>[c.id,c]));
+const D=["Mon","Tue","Wed","Thu","Fri"],T=["6:00 AM","12:00 PM","6:00 PM"];
+const STUDIOS={
+ "CorePower":{n:["Yoga Sculpt","CorePower StrengthX","CorePower1","CorePower 2"],z:["Lakeview","Lincoln Park","Old Town"]},
+ "Solid Core":{n:["Signature50","Foundation50","Advanced50"],z:["River North","Wicker Park","West Loop"]},
+ "Pure Barre":{n:["Pure Barre Classic","Pure Barre Define","Pure Barre Align","Pure Barre Empower"],z:["Old Town","Lincoln Park","Hyde Park"]}
+};
+const SN=Object.keys(STUDIOS);
+let C=[],byId={};
+function build(){const st=STUDIOS[S.studio],N=st.n,Z=st.z;C=[];D.forEach((d,i)=>T.forEach((t,j)=>C.push({id:i+"-"+j,d:d,t:t,n:(i===1&&j===1)?N[0]:N[(i+j)%N.length],l:Z[(i*2+j)%3],s:(i*5+j*7)%9+2})));byId=Object.fromEntries(C.map(c=>[c.id,c]))}
 const k=id=>{const p=id.split("-");return p[0]*3+ +p[1]};
 const ord=(a,b)=>k(a)-k(b);
 const F=[
- {id:"maya",n:"Maya",c:"#e8567a",b:["0-2","1-0","3-1"],their:"full",mine:"full"},
- {id:"jordan",n:"Jordan",c:"#2b8fd9",b:["1-2","2-1","4-0"],their:"busy",mine:"busy"},
- {id:"priya",n:"Priya",c:"#d98a1f",b:["0-0","2-0","4-2"],their:"full",mine:"hidden"},
- {id:"sam",n:"Sam",c:"#7a5ac8",b:["1-1","3-2"],their:"hidden",mine:"busy"}
+ {id:"maya",n:"Maya",c:"#e8567a",bs:{"CorePower":["0-2","1-0","3-1"],"Solid Core":["0-1","2-2","3-0"],"Pure Barre":["1-2","2-0","4-1"]},their:"full",mine:"full"},
+ {id:"jordan",n:"Jordan",c:"#2b8fd9",bs:{"CorePower":["1-2","2-1","4-0"],"Solid Core":["1-1","3-2","4-2"],"Pure Barre":["0-0","3-2","4-0"]},their:"busy",mine:"busy"},
+ {id:"priya",n:"Priya",c:"#d98a1f",bs:{"CorePower":["0-0","2-0","4-2"],"Solid Core":["0-2","2-1","4-0"],"Pure Barre":["0-1","1-1","3-0"]},their:"full",mine:"hidden"},
+ {id:"sam",n:"Sam",c:"#7a5ac8",bs:{"CorePower":["1-1","3-2"],"Solid Core":["2-0","4-1"],"Pure Barre":["1-0","3-2"]},their:"hidden",mine:"busy"}
 ];
 const L={full:"Full schedule",busy:"Busy only",hidden:"Hidden"};
-const S={tab:"home",day:"Tue",me:new Set(["0-2","1-1","2-0","3-2"]),priv:new Set(),hideAll:false,open:null,req:true,extra:[],man:{},imp:{text:"",rows:null,checks:[],errors:[],msg:"",note:null}};
+const S={studio:"CorePower",tab:"home",day:"Tue",me:new Set(["0-2","1-1","2-0","3-2"]),priv:new Set(),hideAll:false,sel:new Set(),inv:new Set(),open:null,req:true,extra:[],man:{},imp:{text:"",rows:null,checks:[],errors:[],msg:"",note:null}};
+const ST={"Solid Core":{me:new Set(["0-0","2-1","3-2"]),priv:new Set(),extra:[]},"Pure Barre":{me:new Set(["1-0","3-1"]),priv:new Set(),extra:[]}};
+function useStudio(){F.forEach(f=>{f.b=f.bs[S.studio]})}
+function nextStudio(){
+  ST[S.studio]={me:S.me,priv:S.priv,extra:S.extra};
+  S.studio=SN[(SN.indexOf(S.studio)+1)%SN.length];
+  const s=ST[S.studio];S.me=s.me;S.priv=s.priv;S.extra=s.extra;
+  S.man={};S.imp={text:"",rows:null,checks:[],errors:[],msg:"",note:null};S.open=null;S.sel=new Set();
+  build();useStudio();
+  document.getElementById("hint").hidden=true;
+  toast("Switched to "+S.studio);R();
+}
 const av=f=>`<span class="av" style="background:${f.c}">${f.n[0]}</span>`;
 function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove("show"),2200)}
 function go(t){S.tab=t;R()}
@@ -105,6 +132,17 @@ function friends(){
   h+=F.map(f=>`<div class="card"><button class="row" style="all:unset;display:flex;gap:10px;align-items:center;width:100%;cursor:pointer" onclick="S.open=S.open==='${f.id}'?null:'${f.id}';R()" aria-expanded="${S.open===f.id}">${av(f)}<span class="grow"><b>${f.n}</b><br><span class="mute">Shares: ${L[f.their]}</span></span><span class="mute">${S.open===f.id?"Hide":"View"}</span></button>${S.open===f.id?`<div style="margin-top:8px">${sched(f)}</div>`:""}</div>`).join("");
   return h;
 }
+function find(){
+  let h=`<h2>Find a time</h2><p class="mute">Pick friends and see classes where everyone is free.</p><div class="chips" style="margin:12px 0">`;
+  h+=F.map(f=>f.their==="hidden"?`<button class="chip" disabled>${f.n} (hidden)</button>`:`<button class="chip ${S.sel.has(f.id)?"on":""}" onclick="pick('${f.id}')">${f.n}</button>`).join("")+`</div>`;
+  if(!S.sel.size)return h+`<div class="card mute">Choose at least one friend to see matching classes.</div>`;
+  const fs=F.filter(f=>S.sel.has(f.id)),names=fs.map(f=>f.n).join(" & ");
+  const res=C.filter(c=>!S.me.has(c.id)&&fs.every(f=>!f.b.includes(c.id)));
+  h+=`<p class="mute">${res.length} classes work for you and ${names}.</p>`;
+  h+=res.slice(0,6).map(c=>{const sent=S.inv.has(c.id);return `<div class="card row cls"><div class="grow"><b>${c.n}</b><span class="mute">${c.d} ${c.t} · ${c.s} spots left</span></div><button class="btn" ${sent?"disabled":""} onclick="join('${c.id}')">${sent?"Invite sent":"Join me"}</button></div>`}).join("");
+  return h;
+}
+/* ---- import helpers (same logic as the real app's import.js) ---- */
 const pad=n=>String(n).padStart(2,"0");
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const clean=(s,m)=>String(s==null?"":s).replace(/[\u0000-\u001f\u007f]/g," ").replace(/\s+/g," ").trim().slice(0,m||60);
@@ -118,24 +156,25 @@ function pDate(s){s=clean(s,20);let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/),y
 function pTime(s){s=clean(s,20).toLowerCase();let m=s.match(/^(\d{1,2}):(\d{2})(?::\d{2})?\s*([ap]m)?$/),h,mi,ap;if(m){h=+m[1];mi=+m[2];ap=m[3]}else if((m=s.match(/^(\d{1,2})\s*([ap]m)$/))){h=+m[1];mi=0;ap=m[2]}else return null;if(ap){if(h<1||h>12)return null;h=(h%12)+(ap==="pm"?12:0)}if(h>23||mi>59)return null;return pad(h)+":"+pad(mi)}
 function csvRows(t){const rows=[];let row=[],f="",q=false;for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=ch}else if(ch==='"')q=true;else if(ch===","){row.push(f);f=""}else if(ch==="\n"||ch==="\r"){if(ch==="\r"&&t[i+1]==="\n")i++;row.push(f);rows.push(row);row=[];f=""}else f+=ch}if(f!==""||row.length){row.push(f);rows.push(row)}return rows.filter(r=>r.some(c=>c.trim()))}
 const AL={date:["date","day"],time:["time","start","start time"],type:["class","type","name","title","class name","class type"],location:["location","studio","place"]};
-function parseCsv(t){const rows=csvRows(t.replace(/^\uFEFF/,""));if(rows.length<2)return{rows:[],errors:["The file needs a header row and at least one class."]};const head=rows[0].map(h=>clean(h,40).toLowerCase()),col={};for(const k in AL)col[k]=head.findIndex(h=>AL[k].includes(h));const miss=["date","time","location"].filter(k=>col[k]<0);if(miss.length)return{rows:[],errors:["Missing column: "+miss.join(", ")+". Use headers date, time, class, location."]};const out=[],errors=[];rows.slice(1).forEach((r,i)=>{const d=pDate(r[col.date]),tm=pTime(r[col.time]);if(!d||!tm){errors.push("Row "+(i+2)+": could not read the date or time.");return}out.push({type:clean(col.type>=0?r[col.type]:"")||"Class",location:clean(r[col.location]),start:d+"T"+tm})});return{rows:out,errors}}
+function parseCsv(t){const rows=csvRows(t.replace(/^﻿/,""));if(rows.length<2)return{rows:[],errors:["The file needs a header row and at least one class."]};const head=rows[0].map(h=>clean(h,40).toLowerCase()),col={};for(const k in AL)col[k]=head.findIndex(h=>AL[k].includes(h));const miss=["date","time","location"].filter(k=>col[k]<0);if(miss.length)return{rows:[],errors:["Missing column: "+miss.join(", ")+". Use headers date, time, class, location."]};const out=[],errors=[];rows.slice(1).forEach((r,i)=>{const d=pDate(r[col.date]),tm=pTime(r[col.time]);if(!d||!tm){errors.push("Row "+(i+2)+": could not read the date or time.");return}out.push({type:clean(col.type>=0?r[col.type]:"")||"Class",location:clean(r[col.location]),start:d+"T"+tm})});return{rows:out,errors}}
 function parseIcs(text){const un=s=>s.replace(/\\n/gi," ").replace(/\\([,;\\])/g,"$1");const lines=text.replace(/\r\n[ \t]/g,"").replace(/\n[ \t]/g,"").split(/\r?\n/);const ev=[];let cur=null;for(const l of lines){if(l==="BEGIN:VEVENT"){cur={};continue}if(l==="END:VEVENT"){if(cur)ev.push(cur);cur=null;continue}if(!cur)continue;const i=l.indexOf(":");if(i<0)continue;const nm=l.slice(0,i).split(";")[0].toUpperCase(),v=l.slice(i+1);if(nm==="DTSTART")cur.dt=v;else if(nm==="SUMMARY")cur.s=un(v);else if(nm==="LOCATION")cur.l=un(v);else if(nm==="RRULE")cur.rec=true}const out=[],errors=[];let allDay=0;for(const e of ev){if(!e.dt)continue;const m=e.dt.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})?(Z)?$/);if(!m){if(/^\d{8}$/.test(e.dt))allDay++;continue}let st=m[1]+"-"+m[2]+"-"+m[3]+"T"+m[4]+":"+m[5];if(m[7])st=new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5])).toLocaleString("sv-SE",{timeZone:"America/Chicago"}).slice(0,16).replace(" ","T");out.push({type:clean(e.s)||"Class",location:clean(e.l),start:st,recurring:!!e.rec})}if(allDay)errors.push(allDay+" all-day event"+(allDay>1?"s were":" was")+" skipped.");if(!ev.length)errors.push("No events found in that calendar file.");return{rows:out,errors}}
-const LIKELY=/corepower|yoga|sculpt|pilates|barre|strengthx|hiit|cycle|spin|class/i;
+const LIKELY=/corepower|solid ?core|yoga|sculpt|pilates|barre|strengthx|hiit|cycle|spin|class/i;
+const likely=s=>LIKELY.test(s)||STUDIOS[S.studio].n.concat(S.studio).some(x=>s.toLowerCase().includes(x.toLowerCase()));
 function matchStudio(loc,start){const l=loc.toLowerCase();for(let i=0;i<5;i++)for(let j=0;j<3;j++){const id=i+"-"+j;if(startOf(id)===start&&l.includes(byId[id].l.toLowerCase()))return id}return null}
 function checkRow(r){const type=clean(r&&r.type)||"Class",location=clean(r&&r.location),start=r&&typeof r.start==="string"?r.start:"";if(!okStart(start)||isNaN(Date.parse(start+":00Z")))return{error:"Could not read the date or time"};if(!location)return{error:"Add a location"};if(start<nowStr())return{error:"Already started"};return{type,location,start}}
 const mineStarts=()=>[...S.me].map(startOf).concat(S.extra.map(x=>x.start));
 function commitRows(rows){let booked=0;const note=[];for(const r of rows){const c=checkRow(r);if(c.error){note.push("Skipped "+(clean(r.type)||"a class")+": "+c.error+".");continue}if(mineStarts().includes(c.start)){note.push("Skipped "+c.type+" on "+fmtWhen(c.start)+": you already have a class at that time.");continue}const id=matchStudio(c.location,c.start);if(id)S.me.add(id);else S.extra.push({id:"x"+Date.now()+Math.random().toString(36).slice(2,6),type:c.type,location:c.location,start:c.start});booked++}note.unshift("Added "+booked+(booked===1?" class.":" classes."));S.imp.note=note;S.imp.rows=null;S.imp.text="";S.man={};toast(note[0]);R()}
 function addManual(){const m=S.man;if(!m.date||!m.time||!m.type||!m.loc){S.imp.msg="Fill in the date, time, class and location.";R();return}S.imp.msg="";commitRows([{type:m.type,location:m.loc,start:m.date+"T"+m.time}])}
-function previewImp(){const t=S.imp.text;S.imp.msg="";if(!t.trim()){S.imp.msg="Paste text or choose a file first.";S.imp.rows=null;R();return}const p=/BEGIN:VCALENDAR/i.test(t)?parseIcs(t):parseCsv(t);const rows=p.rows.slice(0,300).map(r=>{const c=checkRow(r);if(c.error)return{type:r.type,location:r.location,start:r.start,error:c.error};const matched=!!matchStudio(c.location,c.start);return Object.assign({},c,{matched,recurring:!!r.recurring,likely:matched||LIKELY.test(c.type+" "+c.location)})}).sort((a,b)=>String(a.start).localeCompare(String(b.start)));S.imp.rows=rows;S.imp.checks=rows.map(r=>!r.error&&!!r.likely);S.imp.errors=p.errors;R()}
+function previewImp(){const t=S.imp.text;S.imp.msg="";if(!t.trim()){S.imp.msg="Paste text or choose a file first.";S.imp.rows=null;R();return}const p=/BEGIN:VCALENDAR/i.test(t)?parseIcs(t):parseCsv(t);const rows=p.rows.slice(0,300).map(r=>{const c=checkRow(r);if(c.error)return{type:r.type,location:r.location,start:r.start,error:c.error};const matched=!!matchStudio(c.location,c.start);return Object.assign({},c,{matched,recurring:!!r.recurring,likely:matched||likely(c.type+" "+c.location)})}).sort((a,b)=>String(a.start).localeCompare(String(b.start)));S.imp.rows=rows;S.imp.checks=rows.map(r=>!r.error&&!!r.likely);S.imp.errors=p.errors;R()}
 function loadFile(inp){const f=inp.files[0];if(!f)return;if(f.size>300000){S.imp.msg="That file is too large. The limit is 300 KB.";R();return}f.text().then(t=>{S.imp.text=t;previewImp()})}
 function tick(i,v){S.imp.checks[i]=v;R()}
 function addChecked(){commitRows(S.imp.rows.filter((r,i)=>S.imp.checks[i]).map(r=>({type:r.type,location:r.location,start:r.start})))}
-function useSample(){S.imp.text="date,time,class,location\n2026-11-04,12:00 PM,CorePower 2,CorePower Old Town\n2026-11-06,6:00 AM,Barre,Wicker Park\n2026-11-05,3:30 PM,Dentist,Downtown";previewImp()}
+function useSample(){const c=byId["2-1"];S.imp.text="date,time,class,location\n2026-11-04,12:00 PM,"+c.n+","+S.studio+" "+c.l+"\n2026-11-06,6:00 AM,Spin,Wicker Park\n2026-11-05,3:30 PM,Dentist,Downtown";previewImp()}
 function importCard(){
   const I=S.imp,M=S.man,note=I.note;I.note=null;
-  let h=`<h2>Add your classes</h2><p class="mute">Add a class you booked in the CorePower app, or import a calendar file (.ics) or CSV. You choose which ones to add.</p>`;
+  let h=`<h2>Add your classes</h2><p class="mute">Add a class you booked in the ${S.studio} app, or import a calendar file (.ics) or CSV. You choose which ones to add.</p>`;
   if(note)h+=`<div class="banner">${note.map(t=>`<p>${esc(t)}</p>`).join("")}</div>`;
-  h+=`<div class="card"><b>Add one class</b><label for="m-date">Date</label><input id="m-date" type="date" value="${esc(M.date)}" oninput="S.man.date=this.value"><label for="m-time">Time</label><input id="m-time" type="time" value="${esc(M.time)}" oninput="S.man.time=this.value"><label for="m-type">Class</label><input id="m-type" maxlength="60" placeholder="Yoga Sculpt" value="${esc(M.type)}" oninput="S.man.type=this.value"><label for="m-loc">Studio location</label><input id="m-loc" maxlength="60" placeholder="Lincoln Park" value="${esc(M.loc)}" oninput="S.man.loc=this.value"><button class="btn" style="margin-top:8px" onclick="addManual()">Add class</button></div>`;
+  h+=`<div class="card"><b>Add one class</b><label for="m-date">Date</label><input id="m-date" type="date" value="${esc(M.date)}" oninput="S.man.date=this.value"><label for="m-time">Time</label><input id="m-time" type="time" value="${esc(M.time)}" oninput="S.man.time=this.value"><label for="m-type">Class</label><input id="m-type" maxlength="60" placeholder="${esc(STUDIOS[S.studio].n[0])}" value="${esc(M.type)}" oninput="S.man.type=this.value"><label for="m-loc">Studio location</label><input id="m-loc" maxlength="60" placeholder="${esc(STUDIOS[S.studio].z[1])}" value="${esc(M.loc)}" oninput="S.man.loc=this.value"><button class="btn" style="margin-top:8px" onclick="addManual()">Add class</button></div>`;
   h+=`<div class="card"><b>Import from a file</b><p class="mute">Export from Google Calendar or Apple Calendar, or use a CSV with date, time, class, location.</p><input type="file" accept=".ics,.csv,.txt,text/calendar,text/csv" aria-label="Choose a calendar or CSV file" onchange="loadFile(this)"><textarea rows="4" aria-label="Paste calendar or CSV text" placeholder="Or paste CSV text" oninput="S.imp.text=this.value">${esc(I.text)}</textarea><div class="row" style="margin-top:4px"><button class="btn alt" onclick="previewImp()">Preview classes</button><button class="link" onclick="useSample()">Try a sample</button></div>`;
   if(I.msg)h+=`<p class="err" role="alert">${esc(I.msg)}</p>`;
   if(I.rows){
@@ -165,13 +204,17 @@ function privacy(){
   return h;
 }
 function R(){
+  document.getElementById("studio-label").textContent=S.studio+" · Chicago";
+  document.getElementById("mark").setAttribute("aria-label","Switch studio. Now showing "+S.studio);
   document.getElementById("app").innerHTML={home:home,friends:friends,me:me,privacy:privacy}[S.tab]();
   document.getElementById("tabs").innerHTML=[["home",'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1z"/></svg>',"Home"],["friends",'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>',"Friends"],["me",'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 19.5c1-3.5 4-5 7-5s6 1.5 7 5"/></svg>',"Me"],["privacy",'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 5 6v5.5c0 4.2 3 7.2 7 9 4-1.8 7-4.8 7-9V6z"/></svg>',"Privacy"]].map(t=>`<button class="${S.tab===t[0]?"on":""}" onclick="go('${t[0]}')" ${S.tab===t[0]?'aria-current="page"':""}><span>${t[1]}</span>${t[2]}</button>`).join("");
 }
-function reply(ok){S.req=false;if(ok){F.push({id:"alex",n:"Alex",c:"#4a9d6b",b:["1-1","3-2"],their:"busy",mine:"hidden"});toast("Alex added. They can’t see your schedule yet.")}else toast("Request declined");R()}
+function reply(ok){S.req=false;if(ok){F.push({id:"alex",n:"Alex",c:"#4a9d6b",bs:{"CorePower":["1-1","3-2"],"Solid Core":["1-2","4-1"],"Pure Barre":["0-2","2-1"]},b:[],their:"busy",mine:"hidden"});useStudio();toast("Alex added. They can’t see your schedule yet.")}else toast("Request declined");R()}
+function pick(id){S.sel.has(id)?S.sel.delete(id):S.sel.add(id);R()}
+function join(id){S.inv.add(id);const n=[...S.sel].map(x=>F.find(f=>f.id===x).n).join(" & ");toast("Invite sent to "+n);R()}
 function setM(id,v){F.find(f=>f.id===id).mine=v;toast(F.find(f=>f.id===id).n+" now sees: "+L[v]);R()}
 function priv(id){S.priv.has(id)?S.priv.delete(id):S.priv.add(id);R()}
-R();
+build();useStudio();R();
 </script>
 </body>
 </html>
