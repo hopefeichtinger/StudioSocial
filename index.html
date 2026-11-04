@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Duo Flow</title>
+<title>StudioSocial</title>
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Duo Flow">
+<meta name="apple-mobile-web-app-title" content="StudioSocial">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="icon" href="icon.png">
@@ -82,7 +82,7 @@ input:focus-visible,textarea:focus-visible,.link:focus-visible{outline:3px solid
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><button class="mark" id="mark" type="button" onclick="toggleMenu(event)" aria-haspopup="true" aria-expanded="false" aria-controls="menu" aria-label="Switch studio"><span id="ringslot"></span><svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6"/></svg></button><div class="menu" id="menu" role="menu" hidden></div><h1>Duo Flow</h1><span class="mute" id="studio-label">CorePower · Chicago</span></div>
+  <div class="top"><button class="mark" id="mark" type="button" onclick="toggleMenu(event)" aria-haspopup="true" aria-expanded="false" aria-controls="menu" aria-label="Switch studio"><span id="ringslot"></span><svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6"/></svg></button><div class="menu" id="menu" role="menu" hidden></div><h1>StudioSocial</h1><span class="mute" id="studio-label">CorePower · Chicago</span></div>
   <p class="mute" id="hint" style="margin:-6px 0 10px" hidden>Tap the logo to choose a studio.</p>
   <main id="app"></main>
 </div>
@@ -299,14 +299,14 @@ function R(){
     document.getElementById("hint").hidden=true;
     document.getElementById("studio-label").textContent="";
     document.getElementById("mark").classList.add("single");
-    document.getElementById("mark").setAttribute("aria-label","Duo Flow");
+    document.getElementById("mark").setAttribute("aria-label","StudioSocial");
     document.getElementById("app").innerHTML=S.stage==="pick"?pickView():S.stage==="link"?linkView():authView(S.stage==="signup");
     return;
   }
   document.getElementById("nav").hidden=false;
   document.getElementById("mark").classList.toggle("single",S.my.size<2);
   document.documentElement.dataset.studio={"CorePower":"core","Solid Core":"solid","Pure Barre":"barre"}[S.studio];
-  document.getElementById("studio-label").textContent=S.studio+" · Chicago";if(!S.hintShown&&S.my.size>1){S.hintShown=true;document.getElementById("hint").hidden=false}
+  document.getElementById("studio-label").textContent=S.studio;if(!S.hintShown&&S.my.size>1){S.hintShown=true;document.getElementById("hint").hidden=false}
   document.getElementById("mark").setAttribute("aria-label",S.my.size>1?"Switch studio. Now showing "+S.studio:S.studio);
   document.getElementById("menu").innerHTML='<small>Studio</small>'+SN.filter(n=>S.my.has(n)).map(n=>`<button role="menuitemradio" aria-checked="${n===S.studio}" class="${n===S.studio?"on":""}" onclick="pickStudio(\'${n}\')"><span>${n}</span>${n===S.studio?'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5"/></svg>':""}</button>`).join("");
   document.getElementById("app").innerHTML={home:home,friends:friends,me:me,privacy:privacy}[S.tab]();
