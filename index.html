@@ -95,7 +95,11 @@ const F=[
  {id:"sam",n:"Alyssa",c:"#7a5ac8",bs:{"CorePower":["1-1","3-2"],"Solid Core":["2-0","4-1"],"Pure Barre":["1-0","3-2"]},their:"hidden",mine:"busy"}
 ];
 const L={full:"Full schedule",busy:"Busy only",hidden:"Hidden"};
-const S={studio:"CorePower",tab:"home",day:"Tue",me:new Set(["0-2","1-1","2-0","3-2"]),priv:new Set(),hideAll:false,sel:new Set(),inv:new Set(),open:null,req:true,extra:[],man:{},imp:{text:"",rows:null,checks:[],errors:[],msg:"",note:null}};
+const S={studio:"CorePower",tab:"home",day:"Tue",me:new Set(["0-2","1-1","2-0","3-2"]),priv:new Set(),hideAll:false,sel:new Set(),inv:new Set(),open:null,reqs:["kaira","naomi"],extra:[],man:{},imp:{text:"",rows:null,checks:[],errors:[],msg:"",note:null}};
+const REQS={
+ kaira:{n:"Kaira",c:"#4a9d6b",bs:{"CorePower":["1-1","3-2"],"Solid Core":["1-2","4-1"],"Pure Barre":["0-2","2-1"]}},
+ naomi:{n:"Naomi",c:"#2a9d8f",bs:{"CorePower":["0-1","2-2"],"Solid Core":["0-0","3-1"],"Pure Barre":["1-1","4-2"]}}
+};
 const ST={"Solid Core":{me:new Set(["0-0","2-1","3-2"]),priv:new Set(),extra:[]},"Pure Barre":{me:new Set(["1-0","3-1"]),priv:new Set(),extra:[]}};
 function useStudio(){F.forEach(f=>{f.b=f.bs[S.studio]})}
 function setStudio(name){
@@ -138,7 +142,7 @@ function book(id){const c=byId[id];S.me.add(id);toast("Booked "+c.n+", "+c.d+" "
 function cancel(id){const c=byId[id];S.me.delete(id);S.priv.delete(id);toast("Cancelled "+c.n+", "+c.d+" "+c.t);R()}
 function friends(){
   let h="";
-  if(S.req)h+=`<div class="card"><div class="row"><span class="av" style="background:#4a9d6b">K</span><div class="grow"><b>Kaira wants to connect</b><p class="mute">Member at your studio</p></div></div><p class="mute" style="margin:8px 0">Accepting shares nothing until you choose.</p><div class="row"><button class="btn" onclick="reply(1)">Accept</button><button class="btn alt" onclick="reply(0)">Decline</button></div></div>`;
+  h+=S.reqs.map(id=>{const r=REQS[id];return `<div class="card"><div class="row"><span class="av" style="background:${r.c}">${r.n[0]}</span><div class="grow"><b>${r.n} wants to connect</b><p class="mute">Member at your studio</p></div></div><p class="mute" style="margin:8px 0">Accepting shares nothing until you choose.</p><div class="row"><button class="btn" onclick="reply('${id}',1)">Accept</button><button class="btn alt" onclick="reply('${id}',0)">Decline</button></div></div>`}).join("");
   h+=`<h2>Friends</h2>`;
   h+=F.map(f=>`<div class="card"><button class="row" style="all:unset;display:flex;gap:10px;align-items:center;width:100%;cursor:pointer" onclick="S.open=S.open==='${f.id}'?null:'${f.id}';R()" aria-expanded="${S.open===f.id}">${av(f)}<span class="grow"><b>${f.n}</b><br><span class="mute">Shares: ${L[f.their]}</span></span><span class="mute">${S.open===f.id?"Hide":"View"}</span></button>${S.open===f.id?`<div style="margin-top:8px">${sched(f)}</div>`:""}</div>`).join("");
   return h;
@@ -221,7 +225,7 @@ function R(){
   document.getElementById("app").innerHTML={home:home,friends:friends,me:me,privacy:privacy}[S.tab]();
   document.getElementById("tabs").innerHTML=[["home",'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1z"/></svg>',"Home"],["friends",'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>',"Friends"],["me",'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 19.5c1-3.5 4-5 7-5s6 1.5 7 5"/></svg>',"Me"],["privacy",'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 5 6v5.5c0 4.2 3 7.2 7 9 4-1.8 7-4.8 7-9V6z"/></svg>',"Privacy"]].map(t=>`<button class="${S.tab===t[0]?"on":""}" onclick="go('${t[0]}')" ${S.tab===t[0]?'aria-current="page"':""}><span>${t[1]}</span>${t[2]}</button>`).join("");
 }
-function reply(ok){S.req=false;if(ok){F.push({id:"kaira",n:"Kaira",c:"#4a9d6b",bs:{"CorePower":["1-1","3-2"],"Solid Core":["1-2","4-1"],"Pure Barre":["0-2","2-1"]},b:[],their:"busy",mine:"hidden"});useStudio();toast("Kaira added. They can’t see your schedule yet.")}else toast("Request declined");R()}
+function reply(id,ok){const r=REQS[id];S.reqs=S.reqs.filter(x=>x!==id);if(ok){F.push({id:id,n:r.n,c:r.c,bs:r.bs,b:[],their:"busy",mine:"hidden"});useStudio();toast(r.n+" added. They can’t see your schedule yet.")}else toast("Request declined");R()}
 function pick(id){S.sel.has(id)?S.sel.delete(id):S.sel.add(id);R()}
 function join(id){S.inv.add(id);const n=[...S.sel].map(x=>F.find(f=>f.id===x).n).join(" & ");toast("Invite sent to "+n);R()}
 function setM(id,v){F.find(f=>f.id===id).mine=v;toast(F.find(f=>f.id===id).n+" now sees: "+L[v]);R()}
