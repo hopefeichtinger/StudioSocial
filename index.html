@@ -306,7 +306,7 @@ function R(){
   document.getElementById("nav").hidden=false;
   document.getElementById("mark").classList.toggle("single",S.my.size<2);
   document.documentElement.dataset.studio={"CorePower":"core","Solid Core":"solid","Pure Barre":"barre"}[S.studio];
-  document.getElementById("studio-label").textContent=S.studio;if(!S.hintShown&&S.my.size>1){S.hintShown=true;document.getElementById("hint").hidden=false}
+  document.getElementById("studio-label").textContent=S.studio+" · Chicago";if(!S.hintShown&&S.my.size>1){S.hintShown=true;document.getElementById("hint").hidden=false}
   document.getElementById("mark").setAttribute("aria-label",S.my.size>1?"Switch studio. Now showing "+S.studio:S.studio);
   document.getElementById("menu").innerHTML='<small>Studio</small>'+SN.filter(n=>S.my.has(n)).map(n=>`<button role="menuitemradio" aria-checked="${n===S.studio}" class="${n===S.studio?"on":""}" onclick="pickStudio(\'${n}\')"><span>${n}</span>${n===S.studio?'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5"/></svg>':""}</button>`).join("");
   document.getElementById("app").innerHTML={home:home,friends:friends,me:me,privacy:privacy}[S.tab]();
