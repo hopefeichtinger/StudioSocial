@@ -14,7 +14,14 @@
 
 <style>
 :root{color-scheme:light;--bg:#fff;--hero:#fff;--card:#fff;--ink:#2d2210;--mute:#86714f;--line:#fdeccb;--me:#f47c16;--you:#ffd23f;--soft:#fff6e3;--on:#2a1600;--me-t:#b34700;--on-you:#3a2a00;--me2:#ffb347;--glow:244,124,22;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-/* Studio themes (CorePower is the default tokens above), switched by the studio menu */
+/* Pink: sign-in, sign-up and the studio picker. Studio themes (CorePower is the default tokens above), switched by the studio menu */
+:root[data-studio="pink"]{--bg:#fff5f9;--hero:#ffe3ee;--me:#d9457e;--me2:#f4789f;--me-t:#c2306a;--you:#fbb8cd;--soft:#fff0f5;--line:#fbdce8;--ink:#3a1f2b;--mute:#8a5b6d;--on:#fff;--on-you:#5a1030;--glow:217,69,126}
+.tabs[hidden]{display:none}
+.auth{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:20px 18px 14px;box-shadow:0 10px 30px rgba(var(--glow),.12)}
+.auth h2{margin-top:4px}.hero{text-align:center;margin:8px 0 18px}.hero svg{width:84px;height:84px;display:block;margin:0 auto 6px}
+.studio{display:flex;gap:12px;align-items:center;cursor:pointer;border:2px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px;background:var(--card)}
+.studio.on{border-color:var(--me);background:var(--soft)}.studio input{width:22px;height:22px;margin:0;flex:none;accent-color:var(--me)}
+.dot{width:14px;height:14px;border-radius:50%;flex:none;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
 :root[data-studio="solid"]{--me:#2f55d4;--me2:#6f8cf0;--me-t:#2a49bd;--you:#111111;--on:#fff;--on-you:#fff;--soft:#eef2ff;--line:#e2e7f7;--ink:#0b0b0f;--mute:#5a6275;--glow:47,85,212}
 :root[data-studio="barre"]{--me:#e02020;--me2:#ff6b6b;--me-t:#c81818;--you:#ffb3b3;--on:#fff;--on-you:#5a1010;--soft:#fff0f0;--line:#fde0e0;--ink:#2a1214;--mute:#8a5f62;--glow:224,32,32}
 @media not all{:root:not([data-theme="light"]){--bg:#13111f;--card:#1e1b30;--ink:#f1effa;--mute:#a09bbd;--line:#2f2b47;--me:#8d78ff;--you:#2fd8b4;--soft:#2a2547;--hero:#1d1836;--on:#0f0c1c}}
@@ -25,17 +32,16 @@ body{margin:0;background:linear-gradient(180deg,var(--hero) 0,var(--bg) 300px) n
 .wrap{max-width:480px;margin:0 auto;padding:18px 16px 110px}
 .top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .top{position:relative}
-.mark{width:58px;height:26px;position:relative;flex:none;display:block;border:0;background:none;padding:0;cursor:pointer}
-.mark .chev{position:absolute;left:42px;top:5px;width:16px;height:16px;overflow:visible;fill:none;stroke:var(--mute);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+.mark{width:52px;height:34px;position:relative;flex:none;display:block;border:0;background:none;padding:0;cursor:pointer}
+.mark svg.ring{position:absolute;left:0;top:0;width:34px;height:34px;display:block}.ring .a{fill:var(--me2)}.ring .b{fill:var(--you)}.ring .c{fill:var(--me)}
+.mark.single{cursor:default}.mark.single .chev{display:none}
+.mark .chev{position:absolute;left:36px;top:9px;width:16px;height:16px;overflow:visible;fill:none;stroke:var(--mute);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
 .mark[aria-expanded="true"] .chev{transform:rotate(180deg)}
 .menu{position:absolute;left:0;top:calc(100% + 4px);z-index:20;min-width:210px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px;box-shadow:0 12px 32px rgba(60,45,140,.16)}
 .menu button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:var(--ink);padding:12px;border-radius:12px;font:inherit;text-align:left;cursor:pointer}
 .menu button.on{background:var(--soft);font-weight:700}
 .menu button svg{width:16px;height:16px;margin-left:auto;fill:none;stroke:var(--me-t);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .menu small{display:block;padding:6px 12px 4px;font-size:12px;color:var(--mute)}
-.mark i{position:absolute;top:0;width:26px;height:26px;border-radius:50%;mix-blend-mode:multiply}
-.mark i:first-child{left:0;background:var(--me)}.mark i:nth-of-type(2){left:12px;background:var(--you)}
-@media not all{.mark i{mix-blend-mode:screen}}
 h1{font-size:26px;margin:0;letter-spacing:-.3px}
 h2{font-size:18px;margin:20px 0 8px;letter-spacing:-.2px}
 p{margin:4px 0}.mute{color:var(--mute);font-size:14px}
@@ -64,7 +70,7 @@ p{margin:4px 0}.mute{color:var(--mute);font-size:14px}
 #toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%}
 #toast.show{opacity:1}
 .link{background:none;border:0;color:var(--me-t);font:inherit;font-size:14px;cursor:pointer;padding:4px 0}
-input,textarea{width:100%;border:1px solid #dcd8f0;border-radius:12px;padding:12px;font:inherit;margin:6px 0;background:#fff;color:var(--ink)}
+input,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit;margin:6px 0;background:#fff;color:var(--ink)}
 input[type=file]{border:0;padding:8px 0}label{font-size:14px;color:var(--mute);display:block}.err{color:#c0392b;font-size:14px}
 input:focus-visible,textarea:focus-visible,.link:focus-visible{outline:3px solid var(--you);outline-offset:2px}
 .banner{background:var(--soft);border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:12px}
@@ -73,11 +79,11 @@ input:focus-visible,textarea:focus-visible,.link:focus-visible{outline:3px solid
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><button class="mark" id="mark" type="button" onclick="toggleMenu(event)" aria-haspopup="true" aria-expanded="false" aria-controls="menu" aria-label="Switch studio"><i></i><i></i><svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6"/></svg></button><div class="menu" id="menu" role="menu" hidden></div><h1>Duo Flow</h1><span class="mute" id="studio-label">CorePower · Chicago</span></div>
-  <p class="mute" id="hint" style="margin:-6px 0 10px">Tap the logo to choose a studio.</p>
+  <div class="top"><button class="mark" id="mark" type="button" onclick="toggleMenu(event)" aria-haspopup="true" aria-expanded="false" aria-controls="menu" aria-label="Switch studio"><span id="ringslot"></span><svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6"/></svg></button><div class="menu" id="menu" role="menu" hidden></div><h1>Duo Flow</h1><span class="mute" id="studio-label">CorePower · Chicago</span></div>
+  <p class="mute" id="hint" style="margin:-6px 0 10px" hidden>Tap the logo to choose a studio.</p>
   <main id="app"></main>
 </div>
-<nav class="tabs" aria-label="Main"><div id="tabs"></div></nav>
+<nav class="tabs" id="nav" aria-label="Main" hidden><div id="tabs"></div></nav>
 <div id="toast" role="status"></div>
 <script>
 const D=["Mon","Tue","Wed","Thu","Fri"],T=["6:00 AM","12:00 PM","6:00 PM"];
@@ -98,7 +104,7 @@ const F=[
  {id:"sam",n:"Alyssa",c:"#7a5ac8",bs:{"CorePower":["1-1","3-2"],"Solid Core":["2-0","4-1"],"Pure Barre":["1-0","3-2"]},their:"hidden",mine:"busy"}
 ];
 const L={full:"Full schedule",busy:"Busy only",hidden:"Hidden"};
-const S={studio:"CorePower",tab:"home",day:"Tue",me:new Set(["0-2","1-1","2-0","3-2"]),priv:new Set(),hideAll:false,sel:new Set(),inv:new Set(),open:null,reqs:["kaira","naomi"],extra:[],man:{},imp:{text:"",rows:null,checks:[],errors:[],msg:"",note:null}};
+const S={stage:"signin",my:new Set(),editing:false,studio:"CorePower",tab:"home",day:"Tue",me:new Set(["0-2","1-1","2-0","3-2"]),priv:new Set(),hideAll:false,sel:new Set(),inv:new Set(),open:null,reqs:["kaira","naomi"],extra:[],man:{},imp:{text:"",rows:null,checks:[],errors:[],msg:"",note:null}};
 const REQS={
  kaira:{n:"Kaira",c:"#4a9d6b",bs:{"CorePower":["1-1","3-2"],"Solid Core":["1-2","4-1"],"Pure Barre":["0-2","2-1"]}},
  naomi:{n:"Naomi",c:"#2a9d8f",bs:{"CorePower":["0-1","2-2"],"Solid Core":["0-0","3-1"],"Pure Barre":["1-1","4-2"]}}
@@ -113,7 +119,7 @@ function setStudio(name){
   build();useStudio();
 }
 function menuOpen(o){document.getElementById("menu").hidden=!o;document.getElementById("mark").setAttribute("aria-expanded",String(o));if(o)document.getElementById("hint").hidden=true}
-function toggleMenu(e){e.stopPropagation();menuOpen(document.getElementById("menu").hidden)}
+function toggleMenu(e){e.stopPropagation();if(S.stage!=="app"||S.my.size<2)return;menuOpen(document.getElementById("menu").hidden)}
 function pickStudio(name){menuOpen(false);if(name===S.studio)return;setStudio(name);toast("Switched to "+S.studio);R();document.getElementById("mark").focus()}
 document.addEventListener("click",e=>{if(!e.target.closest("#menu"))menuOpen(false)});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!document.getElementById("menu").hidden){menuOpen(false);document.getElementById("mark").focus()}});
@@ -206,7 +212,7 @@ function importCard(){
 }
 function me(){
   const items=[...S.me].map(id=>({key:startOf(id),id})).concat(S.extra.map(x=>({key:x.start,x}))).sort((a,b)=>a.key.localeCompare(b.key));
-  let h=`<h2>My schedule</h2><p class="mute">${items.length} classes booked</p>`;
+  let h=`<div class="card row"><div class="grow"><b>My studios</b><br><span class="mute">${SN.filter(n=>S.my.has(n)).join(" · ")}</span></div><button class="btn alt" onclick="editStudios()">Edit</button></div><h2>My schedule</h2><p class="mute">${items.length} classes booked</p>`;
   h+=items.map(it=>{
     if(it.x){const x=it.x;return `<div class="card cls"><div class="row"><div class="grow"><b>${esc(fmtWhen(x.start))}</b><span class="mute">${esc(x.location)}</span></div><span class="pill">${esc(x.type)}</span></div><p class="mute" style="margin-top:8px">Added by you. Only you and your friends can see this class.</p><button class="link" onclick="S.extra=S.extra.filter(e=>e.id!=='${x.id}');R()">Remove</button></div>`}
     const id=it.id,c=byId[id],pals=F.filter(f=>f.their==="full"&&f.b.includes(id));
@@ -219,13 +225,49 @@ function privacy(){
   h+=F.map(f=>`<div class="card" style="${S.hideAll?"opacity:.55":""}"><div class="row">${av(f)}<b>${f.n}</b></div><div class="seg">${["full","busy","hidden"].map(v=>`<button class="${f.mine===v?"on":""}" onclick="setM('${f.id}','${v}')">${L[v]}</button>`).join("")}</div></div>`).join("");
   h+=`<h2>Private classes</h2><p class="mute">Private classes never show to friends, even with Full schedule.</p>`;
   h+=[...S.me].sort(ord).map(id=>{const c=byId[id];return `<div class="card row"><div class="grow"><b>${c.n}</b><span class="mute">${c.d} ${c.t}</span></div><button class="sw ${S.priv.has(id)?"on":""}" role="switch" aria-checked="${S.priv.has(id)}" aria-label="Make ${c.n} on ${c.d} private" onclick="priv('${id}')"></button></div>`}).join("");
+  h+=`<p style="text-align:center;margin-top:24px"><button class="link" onclick="signOut()">Sign out</button></p>`;
   return h;
 }
+const DOTS={"CorePower":"#f47c16","Solid Core":"#2f55d4","Pure Barre":"#e02020"};
+function ring(){let s='<svg class="ring" viewBox="0 0 200 200" aria-hidden="true">';for(let i=0;i<8;i++){const a=(i*45-90)*Math.PI/180;s+='<circle class="'+(i%2?"b":"a")+'" cx="'+(100+62*Math.cos(a)).toFixed(1)+'" cy="'+(100+62*Math.sin(a)).toFixed(1)+'" r="21"/>'}return s+'<circle class="c" cx="100" cy="100" r="25"/></svg>'}
+function authView(signup){
+  return `<div class="auth"><div class="hero">${ring()}<p class="mute">Take class with your friends.</p></div><h2>${signup?"Create your account":"Sign in"}</h2><p class="mute">See which classes your friends are taking and book together.</p>${signup?`<label for="a-name">Name</label><input id="a-name" autocomplete="off" placeholder="Your name">`:""}<label for="a-email">Email</label><input id="a-email" type="email" autocomplete="off" placeholder="you@email.com"><label for="a-pw">${signup?"Password (8 or more characters)":"Password"}</label><input id="a-pw" type="password" autocomplete="off"><button class="btn" style="width:100%;margin-top:10px" onclick="enter()">${signup?"Create account":"Sign in"}</button>${signup?"":`<p style="text-align:center;margin-top:12px"><button class="link" onclick="toast('Reset links are sent by email in the real app')">Forgot password?</button></p>`}<p style="text-align:center;margin-top:8px"><button class="link" onclick="S.stage='${signup?"signin":"signup"}';R()">${signup?"Have an account? Sign in":"New here? Create an account"}</button></p></div>`;
+}
+function enter(){S.stage=S.my.size?"app":"pick";R();window.scrollTo(0,0)}
+function pickView(){
+  const first=!S.editing;
+  return `<div class="${first?"auth":""}">${first?`<div class="hero">${ring()}</div>`:""}<h2>${first?"Which studios do you go to?":"My studios"}</h2><p class="mute" style="margin-bottom:12px">${first?"Pick every studio you have a membership with, one, two or all three. Each one gets its own home page, and you can change this later.":"Each studio gets its own home page. Switch between them from the logo at the top."}</p>`+
+  SN.map(n=>`<label class="studio ${S.pend.has(n)?"on":""}" for="st-${SN.indexOf(n)}"><input type="checkbox" id="st-${SN.indexOf(n)}" ${S.pend.has(n)?"checked":""} onchange="togStudio('${n}',this.checked)"><span class="dot" style="background:${DOTS[n]}"></span><span class="grow"><b>${n}</b><br><span class="mute">${STUDIOS[n].z.join(" · ")}</span></span></label>`).join("")+
+  `<button class="btn" style="width:100%" ${S.pend.size?"":"disabled"} onclick="saveStudios()">${first?(S.pend.size?"Continue":"Choose a studio"):"Save studios"}</button>${first?"":`<p style="text-align:center;margin-top:8px"><button class="link" onclick="S.editing=false;S.tab='me';R()">Cancel</button></p>`}</div>`;
+}
+S.pend=new Set();
+function togStudio(n,on){on?S.pend.add(n):S.pend.delete(n);R()}
+function saveStudios(){
+  const was=S.editing;S.my=new Set(SN.filter(n=>S.pend.has(n)));
+  const next=S.my.has(S.studio)?S.studio:SN.find(n=>S.my.has(n));
+  if(next!==S.studio)setStudio(next);
+  S.editing=false;S.stage="app";S.tab=was?"me":"home";toast(was?"Studios saved":"You’re all set");R();window.scrollTo(0,0)
+}
+function editStudios(){S.pend=new Set(S.my);S.editing=true;S.stage="pick";R()}
+function signOut(){S.stage="signin";S.my=new Set();S.pend=new Set();S.tab="home";R();window.scrollTo(0,0)}
 function R(){
+  document.getElementById("ringslot").innerHTML=ring();
+  if(S.stage!=="app"){
+    document.documentElement.dataset.studio="pink";
+    document.getElementById("nav").hidden=true;menuOpen(false);
+    document.getElementById("hint").hidden=true;
+    document.getElementById("studio-label").textContent="";
+    document.getElementById("mark").classList.add("single");
+    document.getElementById("mark").setAttribute("aria-label","Duo Flow");
+    document.getElementById("app").innerHTML=S.stage==="pick"?pickView():authView(S.stage==="signup");
+    return;
+  }
+  document.getElementById("nav").hidden=false;
+  document.getElementById("mark").classList.toggle("single",S.my.size<2);
   document.documentElement.dataset.studio={"CorePower":"core","Solid Core":"solid","Pure Barre":"barre"}[S.studio];
-  document.getElementById("studio-label").textContent=S.studio+" · Chicago";
-  document.getElementById("mark").setAttribute("aria-label","Switch studio. Now showing "+S.studio);
-  document.getElementById("menu").innerHTML='<small>Studio</small>'+SN.map(n=>`<button role="menuitemradio" aria-checked="${n===S.studio}" class="${n===S.studio?"on":""}" onclick="pickStudio(\'${n}\')"><span>${n}</span>${n===S.studio?'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5"/></svg>':""}</button>`).join("");
+  document.getElementById("studio-label").textContent=S.studio+" · Chicago";if(!S.hintShown&&S.my.size>1){S.hintShown=true;document.getElementById("hint").hidden=false}
+  document.getElementById("mark").setAttribute("aria-label",S.my.size>1?"Switch studio. Now showing "+S.studio:S.studio);
+  document.getElementById("menu").innerHTML='<small>Studio</small>'+SN.filter(n=>S.my.has(n)).map(n=>`<button role="menuitemradio" aria-checked="${n===S.studio}" class="${n===S.studio?"on":""}" onclick="pickStudio(\'${n}\')"><span>${n}</span>${n===S.studio?'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5"/></svg>':""}</button>`).join("");
   document.getElementById("app").innerHTML={home:home,friends:friends,me:me,privacy:privacy}[S.tab]();
   document.getElementById("tabs").innerHTML=[["home",'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1z"/></svg>',"Home"],["friends",'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>',"Friends"],["me",'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 19.5c1-3.5 4-5 7-5s6 1.5 7 5"/></svg>',"Me"],["privacy",'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 5 6v5.5c0 4.2 3 7.2 7 9 4-1.8 7-4.8 7-9V6z"/></svg>',"Privacy"]].map(t=>`<button class="${S.tab===t[0]?"on":""}" onclick="go('${t[0]}')" ${S.tab===t[0]?'aria-current="page"':""}><span>${t[1]}</span>${t[2]}</button>`).join("");
 }
