@@ -21,9 +21,17 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:linear-gradient(180deg,var(--hero) 0,var(--bg) 300px) no-repeat var(--bg);color:var(--ink);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .wrap{max-width:480px;margin:0 auto;padding:18px 16px 110px}
 .top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.mark{width:38px;height:26px;position:relative;flex:none;display:block;border:0;background:none;padding:0;cursor:pointer}
+.top{position:relative}
+.mark{width:58px;height:26px;position:relative;flex:none;display:block;border:0;background:none;padding:0;cursor:pointer}
+.mark .chev{position:absolute;left:42px;top:5px;width:16px;height:16px;overflow:visible;fill:none;stroke:var(--mute);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+.mark[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.menu{position:absolute;left:0;top:calc(100% + 4px);z-index:20;min-width:210px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px;box-shadow:0 12px 32px rgba(60,45,140,.16)}
+.menu button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:var(--ink);padding:12px;border-radius:12px;font:inherit;text-align:left;cursor:pointer}
+.menu button.on{background:var(--soft);font-weight:700}
+.menu button svg{width:16px;height:16px;margin-left:auto;fill:none;stroke:var(--me);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.menu small{display:block;padding:6px 12px 4px;font-size:12px;color:var(--mute)}
 .mark i{position:absolute;top:0;width:26px;height:26px;border-radius:50%;mix-blend-mode:multiply}
-.mark i:first-child{left:0;background:var(--me)}.mark i:last-child{left:12px;background:var(--you)}
+.mark i:first-child{left:0;background:var(--me)}.mark i:nth-of-type(2){left:12px;background:var(--you)}
 @media not all{.mark i{mix-blend-mode:screen}}
 h1{font-size:26px;margin:0;letter-spacing:-.3px}
 h2{font-size:18px;margin:20px 0 8px;letter-spacing:-.2px}
@@ -62,8 +70,8 @@ input:focus-visible,textarea:focus-visible,.link:focus-visible{outline:3px solid
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><button class="mark" id="mark" type="button" onclick="nextStudio()" aria-label="Switch studio"><i></i><i></i></button><h1>Duo Flow</h1><span class="mute" id="studio-label">CorePower · Chicago</span></div>
-  <p class="mute" id="hint" style="margin:-6px 0 10px">Tap the logo to switch studios.</p>
+  <div class="top"><button class="mark" id="mark" type="button" onclick="toggleMenu(event)" aria-haspopup="true" aria-expanded="false" aria-controls="menu" aria-label="Switch studio"><i></i><i></i><svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6"/></svg></button><div class="menu" id="menu" role="menu" hidden></div><h1>Duo Flow</h1><span class="mute" id="studio-label">CorePower · Chicago</span></div>
+  <p class="mute" id="hint" style="margin:-6px 0 10px">Tap the logo to choose a studio.</p>
   <main id="app"></main>
 </div>
 <nav class="tabs" aria-label="Main"><div id="tabs"></div></nav>
@@ -90,15 +98,18 @@ const L={full:"Full schedule",busy:"Busy only",hidden:"Hidden"};
 const S={studio:"CorePower",tab:"home",day:"Tue",me:new Set(["0-2","1-1","2-0","3-2"]),priv:new Set(),hideAll:false,sel:new Set(),inv:new Set(),open:null,req:true,extra:[],man:{},imp:{text:"",rows:null,checks:[],errors:[],msg:"",note:null}};
 const ST={"Solid Core":{me:new Set(["0-0","2-1","3-2"]),priv:new Set(),extra:[]},"Pure Barre":{me:new Set(["1-0","3-1"]),priv:new Set(),extra:[]}};
 function useStudio(){F.forEach(f=>{f.b=f.bs[S.studio]})}
-function nextStudio(){
+function setStudio(name){
   ST[S.studio]={me:S.me,priv:S.priv,extra:S.extra};
-  S.studio=SN[(SN.indexOf(S.studio)+1)%SN.length];
+  S.studio=name;
   const s=ST[S.studio];S.me=s.me;S.priv=s.priv;S.extra=s.extra;
   S.man={};S.imp={text:"",rows:null,checks:[],errors:[],msg:"",note:null};S.open=null;S.sel=new Set();
   build();useStudio();
-  document.getElementById("hint").hidden=true;
-  toast("Switched to "+S.studio);R();
 }
+function menuOpen(o){document.getElementById("menu").hidden=!o;document.getElementById("mark").setAttribute("aria-expanded",String(o));if(o)document.getElementById("hint").hidden=true}
+function toggleMenu(e){e.stopPropagation();menuOpen(document.getElementById("menu").hidden)}
+function pickStudio(name){menuOpen(false);if(name===S.studio)return;setStudio(name);toast("Switched to "+S.studio);R();document.getElementById("mark").focus()}
+document.addEventListener("click",e=>{if(!e.target.closest("#menu"))menuOpen(false)});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!document.getElementById("menu").hidden){menuOpen(false);document.getElementById("mark").focus()}});
 const av=f=>`<span class="av" style="background:${f.c}">${f.n[0]}</span>`;
 function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove("show"),2200)}
 function go(t){S.tab=t;R()}
@@ -206,6 +217,7 @@ function privacy(){
 function R(){
   document.getElementById("studio-label").textContent=S.studio+" · Chicago";
   document.getElementById("mark").setAttribute("aria-label","Switch studio. Now showing "+S.studio);
+  document.getElementById("menu").innerHTML='<small>Studio</small>'+SN.map(n=>`<button role="menuitemradio" aria-checked="${n===S.studio}" class="${n===S.studio?"on":""}" onclick="pickStudio(\'${n}\')"><span>${n}</span>${n===S.studio?'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5"/></svg>':""}</button>`).join("");
   document.getElementById("app").innerHTML={home:home,friends:friends,me:me,privacy:privacy}[S.tab]();
   document.getElementById("tabs").innerHTML=[["home",'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1z"/></svg>',"Home"],["friends",'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>',"Friends"],["me",'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 19.5c1-3.5 4-5 7-5s6 1.5 7 5"/></svg>',"Me"],["privacy",'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 5 6v5.5c0 4.2 3 7.2 7 9 4-1.8 7-4.8 7-9V6z"/></svg>',"Privacy"]].map(t=>`<button class="${S.tab===t[0]?"on":""}" onclick="go('${t[0]}')" ${S.tab===t[0]?'aria-current="page"':""}><span>${t[1]}</span>${t[2]}</button>`).join("");
 }
