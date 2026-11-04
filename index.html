@@ -243,7 +243,7 @@ function enter(){S.stage=S.my.size?"app":"pick";R();window.scrollTo(0,0)}
 function pickView(){
   const first=!S.editing;
   return `<div class="${first?"auth":""}">${first?`<div class="hero">${ring()}</div>`:""}<h2>${first?"Which studios do you go to?":"My studios"}</h2><p class="mute" style="margin-bottom:12px">${first?"Pick every studio you have a membership with, one, two or all three. Each one gets its own home page, and you can change this later.":"Each studio gets its own home page. Switch between them from the logo at the top."}</p>`+
-  SN.map(n=>`<label class="studio ${S.pend.has(n)?"on":""}" for="st-${SN.indexOf(n)}"><input type="checkbox" id="st-${SN.indexOf(n)}" ${S.pend.has(n)?"checked":""} onchange="togStudio('${n}',this.checked)"><span class="dot" style="background:${DOTS[n]}"></span><span class="grow"><b>${n}</b><br><span class="mute">${STUDIOS[n].z.join(" · ")}</span></span></label>`).join("")+
+  SN.map(n=>`<label class="studio ${S.pend.has(n)?"on":""}" for="st-${SN.indexOf(n)}"><input type="checkbox" id="st-${SN.indexOf(n)}" ${S.pend.has(n)?"checked":""} onchange="togStudio('${n}',this.checked)"><span class="dot" style="background:${DOTS[n]}"></span><span class="grow"><b>${n}</b></span></label>`).join("")+
   `<button class="btn" style="width:100%" ${S.pend.size?"":"disabled"} onclick="saveStudios()">${first?(S.pend.size?"Continue":"Choose a studio"):"Save studios"}</button>${first?"":`<p style="text-align:center;margin-top:8px"><button class="link" onclick="S.editing=false;S.tab='me';R()">Cancel</button></p>`}</div>`;
 }
 S.pend=new Set();
