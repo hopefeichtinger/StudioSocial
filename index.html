@@ -21,6 +21,8 @@
 .auth h2{margin-top:4px}.hero{text-align:center;margin:8px 0 18px}.hero svg{width:84px;height:84px;display:block;margin:0 auto 6px}
 .studio{display:flex;gap:12px;align-items:center;cursor:pointer;border:2px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px;background:var(--card)}
 .studio.on{border-color:var(--me);background:var(--soft)}.studio input{width:22px;height:22px;margin:0;flex:none;accent-color:var(--me)}
+.code{letter-spacing:.4em;text-align:center;font-size:22px;font-weight:700}
+.ok{color:#2a8a4a;font-weight:700}.tag{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;background:var(--soft);color:var(--me-t)}
 .dot{width:14px;height:14px;border-radius:50%;flex:none;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
 :root[data-studio="solid"]{--me:#2f55d4;--me2:#6f8cf0;--me-t:#2a49bd;--you:#111111;--on:#fff;--on-you:#fff;--soft:#eef2ff;--line:#e2e7f7;--ink:#0b0b0f;--mute:#5a6275;--glow:47,85,212}
 :root[data-studio="barre"]{--me:#e02020;--me2:#ff6b6b;--me-t:#c81818;--you:#ffb3b3;--on:#fff;--on-you:#5a1010;--soft:#fff0f0;--line:#fde0e0;--ink:#2a1214;--mute:#8a5f62;--glow:224,32,32}
@@ -104,7 +106,7 @@ const F=[
  {id:"sam",n:"Alyssa",c:"#7a5ac8",bs:{"CorePower":["1-1","3-2"],"Solid Core":["2-0","4-1"],"Pure Barre":["1-0","3-2"]},their:"hidden",mine:"busy"}
 ];
 const L={full:"Full schedule",busy:"Busy only",hidden:"Hidden"};
-const S={stage:"signin",my:new Set(),editing:false,studio:"CorePower",tab:"home",day:"Tue",me:new Set(["0-2","1-1","2-0","3-2"]),priv:new Set(),hideAll:false,sel:new Set(),inv:new Set(),open:null,reqs:["kaira","naomi"],extra:[],man:{},imp:{text:"",rows:null,checks:[],errors:[],msg:"",note:null}};
+const S={stage:"signin",my:new Set(),linked:new Set(),codeFor:null,codeMsg:"",loc:null,locMsg:"",fromMe:false,editing:false,studio:"CorePower",tab:"home",day:"Tue",me:new Set(["0-2","1-1","2-0","3-2"]),priv:new Set(),hideAll:false,sel:new Set(),inv:new Set(),open:null,reqs:["kaira","naomi"],extra:[],man:{},imp:{text:"",rows:null,checks:[],errors:[],msg:"",note:null}};
 const REQS={
  kaira:{n:"Kaira",c:"#4a9d6b",bs:{"CorePower":["1-1","3-2"],"Solid Core":["1-2","4-1"],"Pure Barre":["0-2","2-1"]}},
  naomi:{n:"Naomi",c:"#2a9d8f",bs:{"CorePower":["0-1","2-2"],"Solid Core":["0-0","3-1"],"Pure Barre":["1-1","4-2"]}}
@@ -134,7 +136,7 @@ function home(){
   const di=D.indexOf(S.day);
   let h=S.hideAll?`<div class="banner">Your schedule is hidden from everyone right now.</div>`:"";
   h+=`<div class="days" role="tablist" aria-label="Day">`+D.map((d,i)=>`<button class="day ${S.day===d?"on":""}" role="tab" aria-selected="${S.day===d}" onclick="S.day='${d}';R()"><span>${d}</span><b>${2+i}</b></button>`).join("")+`</div>`;
-  h+=`<p class="mute">November ${2+di}. Friends who share their schedule show up on each class.</p>`;
+  const nr=nearest();if(!S.linked.has(S.studio))h+=`<div class="banner">Link your ${S.studio} membership to confirm it’s you. <button class="link" onclick="linkFromMe()">Link now</button></div>`;if(nr)h+=`<p class="mute">Nearest to you: <b>${nr.z}</b> · ${nr.d<10?nr.d.toFixed(1):Math.round(nr.d)} mi</p>`;h+=`<p class="mute">November ${2+di}. Friends who share their schedule show up on each class.</p>`;
   h+=T.map((t,j)=>{
     const id=di+"-"+j,c=byId[id],booked=S.me.has(id);
     const pals=F.filter(f=>f.their==="full"&&f.b.includes(id)),busy=F.filter(f=>f.their==="busy"&&f.b.includes(id));
@@ -143,7 +145,7 @@ function home(){
     if(pals.length)who=`<div class="row" style="margin-top:10px"><div class="avs">${pals.map(av).join("")}</div><span class="mute">${pals.map(f=>f.n).join(" & ")} ${pals.length>1?"are":"is"} going</span></div>`;
     if(busy.length)who+=`<p class="mute" style="margin-top:6px">${busy.map(f=>f.n).join(" & ")} ${busy.length>1?"are":"is"} booked at this time</p>`;
     const btn=booked?`<button class="btn alt" onclick="cancel('${id}')">Cancel</button>`:`<button class="btn" onclick="book('${id}')">${pals.length?"Book with "+pals[0].n+(pals.length>1?" +"+(pals.length-1):""):"Book"}</button>`;
-    return `<div class="slot"><div class="tm">${t}</div><div class="card cls"><div class="row"><div class="grow"><b>${c.n}</b><span class="mute">${c.l} · ${spots} spots left</span></div></div>${who}<div class="row" style="margin-top:12px;justify-content:space-between"><span class="mute">${booked?(S.priv.has(id)?"Booked · private":"Booked"):""}</span>${btn}</div></div></div>`;
+    return `<div class="slot"><div class="tm">${t}</div><div class="card cls"><div class="row"><div class="grow"><b>${c.n}</b><span class="mute">${c.l} · ${spots} spots left</span></div>${nr&&nr.z===c.l?`<span class="pill">Nearest</span>`:""}</div>${who}<div class="row" style="margin-top:12px;justify-content:space-between"><span class="mute">${booked?(S.priv.has(id)?"Booked · private":"Booked"):""}</span>${btn}</div></div></div>`;
   }).join("");
   return h;
 }
@@ -212,7 +214,7 @@ function importCard(){
 }
 function me(){
   const items=[...S.me].map(id=>({key:startOf(id),id})).concat(S.extra.map(x=>({key:x.start,x}))).sort((a,b)=>a.key.localeCompare(b.key));
-  let h=`<div class="card row"><div class="grow"><b>My studios</b><br><span class="mute">${SN.filter(n=>S.my.has(n)).join(" · ")}</span></div><button class="btn alt" onclick="editStudios()">Edit</button></div><h2>My schedule</h2><p class="mute">${items.length} classes booked</p>`;
+  let h=`<div class="card row"><div class="grow"><b>My studios</b><br>${SN.filter(n=>S.my.has(n)).map(n=>`<span class="mute">${n} · ${S.linked.has(n)?"linked":"not linked"}</span>`).join("<br>")}</div><button class="btn alt" onclick="editStudios()">Edit</button></div>${SN.some(n=>S.my.has(n)&&!S.linked.has(n))?`<div class="card row"><div class="grow"><b>Link your membership</b><p class="mute">A studio texts you a code to confirm it’s you.</p></div><button class="btn" onclick="linkFromMe()">Link</button></div>`:""}<h2>My schedule</h2><p class="mute">${items.length} classes booked</p>`;
   h+=items.map(it=>{
     if(it.x){const x=it.x;return `<div class="card cls"><div class="row"><div class="grow"><b>${esc(fmtWhen(x.start))}</b><span class="mute">${esc(x.location)}</span></div><span class="pill">${esc(x.type)}</span></div><p class="mute" style="margin-top:8px">Added by you. Only you and your friends can see this class.</p><button class="link" onclick="S.extra=S.extra.filter(e=>e.id!=='${x.id}');R()">Remove</button></div>`}
     const id=it.id,c=byId[id],pals=F.filter(f=>f.their==="full"&&f.b.includes(id));
@@ -244,12 +246,44 @@ S.pend=new Set();
 function togStudio(n,on){on?S.pend.add(n):S.pend.delete(n);R()}
 function saveStudios(){
   const was=S.editing;S.my=new Set(SN.filter(n=>S.pend.has(n)));
+  S.linked=new Set([...S.linked].filter(n=>S.my.has(n)));
   const next=S.my.has(S.studio)?S.studio:SN.find(n=>S.my.has(n));
   if(next!==S.studio)setStudio(next);
-  S.editing=false;S.stage="app";S.tab=was?"me":"home";toast(was?"Studios saved":"You’re all set");R();window.scrollTo(0,0)
+  S.editing=false;S.fromMe=was;
+  if(!was){S.stage="link";S.codeFor=null;S.codeMsg=""}
+  else{S.stage="app";S.tab="me";toast("Studios saved")}
+  R();window.scrollTo(0,0)
 }
+const LOCXY={"Lakeview":[41.940,-87.650],"Lincoln Park":[41.924,-87.650],"Old Town":[41.910,-87.637],"River North":[41.892,-87.634],"Wicker Park":[41.908,-87.677],"West Loop":[41.882,-87.648],"Hyde Park":[41.794,-87.590]};
+const miles=(a,b)=>{const r=x=>x*Math.PI/180,dl=r(b[0]-a[0]),dn=r(b[1]-a[1]),q=Math.sin(dl/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dn/2)**2;return 3959*2*Math.asin(Math.sqrt(q))};
+function nearest(){if(!S.loc)return null;let best=null;STUDIOS[S.studio].z.forEach(z=>{const d=miles(S.loc.xy,LOCXY[z]);if(!best||d<best.d)best={z:z,d:d}});return best}
+function shareLoc(){
+  S.locMsg="";
+  if(!navigator.geolocation){S.locMsg="This browser can’t share location. Try the demo spot.";R();return}
+  S.locMsg="Asking for your location…";R();
+  navigator.geolocation.getCurrentPosition(p=>{S.loc={xy:[p.coords.latitude,p.coords.longitude],demo:false};S.locMsg="";toast("Location on. Showing your nearest studio.");R()},()=>{S.locMsg="Location is off for this page. You can allow it in your browser or phone settings, or try the demo spot.";R()},{timeout:10000,maximumAge:600000})
+}
+function demoLoc(){S.loc={xy:LOCXY["Lincoln Park"],demo:true};S.locMsg="";toast("Demo location: Lincoln Park");R()}
+function clearLoc(){S.loc=null;S.locMsg="";R()}
+function sendCode(n){S.codeFor=n;S.codeMsg="";toast(n+" sent a code to the phone on your membership");R()}
+function checkCode(n){const v=(document.getElementById("code-in")||{}).value||"";if(v.replace(/\D/g,"")==="123456"){S.linked.add(n);S.codeFor=null;S.codeMsg="";toast(n+" membership linked");R()}else{S.codeMsg="That code isn’t right. Check the text and try again.";R()}}
+function linkView(){
+  const mine=SN.filter(n=>S.my.has(n));
+  let h=`<div class="auth"><div class="hero">${ring()}</div><h2>Link your membership</h2><p class="mute" style="margin-bottom:12px">${"We’ll ask each studio to text a confirmation code to the phone number on your membership. Enter it here to link your account. You can skip this and link later in Me."}</p>`;
+  h+=mine.map(n=>{
+    const ok=S.linked.has(n),open=S.codeFor===n;
+    let body=ok?`<span class="ok">Linked ✓</span>`:open?`<p class="mute" style="margin:8px 0 0">${n} sent a 6-digit code. It works for 10 minutes.</p><input class="code" id="code-in" inputmode="numeric" maxlength="6" placeholder="······" aria-label="${n} confirmation code" autocomplete="one-time-code"><p class="mute">Demo: the code is 123456.</p>${S.codeMsg?`<p class="err" role="alert">${esc(S.codeMsg)}</p>`:""}<div class="row"><button class="btn" onclick="checkCode('${n}')">Verify code</button><button class="link" onclick="sendCode('${n}')">Send again</button></div>`:`<button class="btn" onclick="sendCode('${n}')">Send confirmation code</button>`;
+    return `<div class="card"><div class="row"><span class="dot" style="background:${DOTS[n]}"></span><b class="grow">${n}</b>${ok?"":`<span class="tag">Not linked</span>`}</div><div style="margin-top:8px">${body}</div></div>`}).join("");
+  h+=`<div class="card"><b>Find studios near you</b><p class="mute" style="margin:4px 0 8px">Share your location to see your nearest studio first. We use it on your phone to sort locations and never share it with friends.</p>`;
+  if(S.loc)h+=`<p class="ok">Location on${S.loc.demo?" (demo: Lincoln Park)":""} ✓</p><button class="link" onclick="clearLoc()">Turn off</button>`;
+  else h+=`<div class="row"><button class="btn alt" onclick="shareLoc()">Use my location</button><button class="link" onclick="demoLoc()">Try a demo spot</button></div>`+(S.locMsg?`<p class="mute" role="status" style="margin-top:6px">${esc(S.locMsg)}</p>`:"");
+  h+=`</div><button class="btn" style="width:100%" onclick="finishLink()">${S.linked.size?"Continue":"Skip for now"}</button></div>`;
+  return h;
+}
+function finishLink(){S.stage="app";S.tab=S.fromMe?"me":"home";S.fromMe=false;toast(S.linked.size?"You’re all set":"You can link a membership later in Me");R();window.scrollTo(0,0)}
+function linkFromMe(){S.fromMe=true;S.stage="link";S.codeFor=null;S.codeMsg="";R();window.scrollTo(0,0)}
 function editStudios(){S.pend=new Set(S.my);S.editing=true;S.stage="pick";R()}
-function signOut(){S.stage="signin";S.my=new Set();S.pend=new Set();S.tab="home";R();window.scrollTo(0,0)}
+function signOut(){S.stage="signin";S.my=new Set();S.pend=new Set();S.linked=new Set();S.loc=null;S.locMsg="";S.codeFor=null;S.tab="home";R();window.scrollTo(0,0)}
 function R(){
   document.getElementById("ringslot").innerHTML=ring();
   if(S.stage!=="app"){
@@ -259,7 +293,7 @@ function R(){
     document.getElementById("studio-label").textContent="";
     document.getElementById("mark").classList.add("single");
     document.getElementById("mark").setAttribute("aria-label","Duo Flow");
-    document.getElementById("app").innerHTML=S.stage==="pick"?pickView():authView(S.stage==="signup");
+    document.getElementById("app").innerHTML=S.stage==="pick"?pickView():S.stage==="link"?linkView():authView(S.stage==="signup");
     return;
   }
   document.getElementById("nav").hidden=false;
